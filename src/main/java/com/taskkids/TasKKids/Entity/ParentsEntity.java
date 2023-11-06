@@ -1,5 +1,51 @@
-package com.taskkids.TasKKids.Entity;
 
+package com.taskkids.TasKKids.entity;
+import lombok.Getter;
+import lombok.Setter;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "parents")
 public class ParentsEntity {
-    
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long parentId;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String nickname;
+
+    @Column
+    private String picture;
+
+    // Relation avec ChildrenEntity
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChildrenEntity> children = new HashSet<>();
+
+    // Relation avec TasksEntity
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TasksEntity> tasks = new HashSet<>();
+
+    // Relation avec RewardsEntity
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RewardsEntity> rewards = new HashSet<>();
 }
+
