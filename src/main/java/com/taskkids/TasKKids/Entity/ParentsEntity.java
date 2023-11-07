@@ -1,7 +1,11 @@
 
 package com.taskkids.TasKKids.entity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +21,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@ToString
+@NoArgsConstructor
 @Table(name = "parents")
 public class ParentsEntity {
 
@@ -37,15 +43,16 @@ public class ParentsEntity {
     private String picture;
 
     // Relation avec ChildrenEntity
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST)
+    @JsonIgnoreProperties("parent")
     private Set<ChildrenEntity> children = new HashSet<>();
 
     // Relation avec TasksEntity
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST)
     private Set<TasksEntity> tasks = new HashSet<>();
 
     // Relation avec RewardsEntity
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST)
     private Set<RewardsEntity> rewards = new HashSet<>();
 }
 

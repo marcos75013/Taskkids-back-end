@@ -1,7 +1,13 @@
 
 package com.taskkids.TasKKids.entity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +25,8 @@ import jakarta.persistence.Table;
 
 @Getter
 @Setter
+@ToString
+@NoArgsConstructor
 @Entity
 @Table(name = "children")
 public class ChildrenEntity {
@@ -41,6 +49,7 @@ public class ChildrenEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", nullable = false)
+    @JsonIgnoreProperties("children")
     private ParentsEntity parent;
 
     // Relation avec TasksEntity
@@ -50,5 +59,33 @@ public class ChildrenEntity {
     // Relation avec ScoreEntity
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ScoreEntity> scores = new HashSet<>();
+
+
+    public Object getFirstName() {
+        return null;
+    }
+
+    public void setFirstName(Object firstName) {
+    }
+
+    public Object getLastName() {
+        return null;
+    }
+
+    public Object getBirthDate() {
+        return null;
+    }
+
+    public void setLastName(Object lastName) {
+    }
+
+    public void setBirthDate(Object birthDate) {
+    }
 }
+
+    
+
+
+
+
 
