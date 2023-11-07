@@ -2,6 +2,7 @@ package com.taskkids.TasKKids.controller;
 
 import com.taskkids.TasKKids.entity.ChildrenEntity;
 import com.taskkids.TasKKids.entity.TasksEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +11,23 @@ import org.springframework.web.bind.annotation.*;
 import com.taskkids.TasKKids.entity.ParentsEntity;
 import com.taskkids.TasKKids.service.ParentsService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/parents")
+@RequiredArgsConstructor
 public class ParentsController {
 
     private final ParentsService parentsService;
 
-    @Autowired
-    public ParentsController(ParentsService parentsService) {
-        this.parentsService = parentsService;
+//    @Autowired
+//    public ParentsController(ParentsService parentsService) {
+//        this.parentsService = parentsService;
+//    }
+
+    @GetMapping("/parents") //Postman OK ***************************************************
+    public ResponseEntity<List<ParentsEntity>> getParents() {
+        return new ResponseEntity<>(parentsService.getAll(),HttpStatus.OK);
     }
 
 
@@ -44,14 +53,14 @@ public class ParentsController {
 
 
     //Ajouter un ou plusieurs enfants (Parent):
-    @PostMapping("profile/{parentId}/children")
+    @PostMapping("profile/{parentId}/children") //Postman OK ***************************************************
     public ResponseEntity<ParentsEntity> addChildrenToParent(@PathVariable Long parentId, @RequestBody ChildrenEntity child) {
         ParentsEntity parent = parentsService.addChild(parentId, child);
         return new ResponseEntity<>(parent, HttpStatus.CREATED);
     }
 
 
-   //Afficher un ou plusieurs enfants (Parent):
+   //update un ou plusieurs enfants (Parent):
     @PutMapping("/{parentId}/children/{childId}")
     public ResponseEntity<ParentsEntity> updateChild(@PathVariable Long parentId, @PathVariable Long childId, @RequestBody ChildrenEntity childDetails) {
         ParentsEntity parent = parentsService.updateChild(parentId, childId, childDetails);
@@ -65,6 +74,36 @@ public class ParentsController {
         parentsService.deleteChild(parentId, childId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+//    //rajouter une ou plusieurs tâches à un ou plusieurs enfants (Parent):   ////pas encore de servive
+//    @PostMapping("/{parentId}/children/{childId}/tasks")
+//    public ResponseEntity<ParentsEntity> addTasksToChild(@PathVariable Long parentId, @PathVariable Long childId, @RequestBody TasksEntity task) {
+//        ParentsEntity parent = parentsService.addTaskToChild(parentId, childId, task);
+//        return new ResponseEntity<>(parent, HttpStatus.CREATED);
+//    }
+//
+//    //modifier une ou plusieurs tâches à un ou plusieurs enfants (Parent):   ////pas encore de servive
+//    @PutMapping("/{parentId}/children/{childId}/tasks/{taskId}")
+//    public ResponseEntity<ParentsEntity> updateTask(@PathVariable Long parentId, @PathVariable Long childId, @PathVariable Long taskId, @RequestBody TasksEntity taskDetails) {
+//        ParentsEntity parent = parentsService.updateTask(parentId, childId, taskId, taskDetails);
+//        return new ResponseEntity<>(parent, HttpStatus.OK);
+//    }
+//
+//    //supprimer une ou plusieurs tâches à un ou plusieurs enfants (Parent):   ////pas encore de servive
+//    @DeleteMapping("/{parentId}/children/{childId}/tasks/{taskId}")
+//    public ResponseEntity<Void> deleteTask(@PathVariable Long parentId, @PathVariable Long childId, @PathVariable Long taskId) {
+//        parentsService.deleteTask(parentId, childId, taskId);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
+//
+//    //afficher les tâches d'un ou plusieurs enfants (Parent):   ////pas encore de servive
+//    @GetMapping("/{parentId}/children/{childId}/tasks")
+//    public ResponseEntity<List<TasksEntity>> getTasks(@PathVariable Long parentId, @PathVariable Long childId) {
+//        List<TasksEntity> tasks = parentsService.getTasks(parentId, childId);
+//        return new ResponseEntity<>(tasks, HttpStatus.OK);
+//    }
+
+
 
 
 

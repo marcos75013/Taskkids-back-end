@@ -46,6 +46,18 @@ public class ChildrenService {
 
     private final ChildrenRepository childrenRepository;
 
+    public List<ChildrenEntity> getAll() {
+        return childrenRepository.findAll();
+    }
+
+
+    public ChildrenEntity getChild(Long childrenId) {
+        Optional<ChildrenEntity> optionalChild = childrenRepository.findById(childrenId);
+        if (optionalChild.isEmpty()) {
+            throw new IllegalArgumentException("Enfant introuvable.");
+        }
+        return optionalChild.get();
+    }
 }
 
 

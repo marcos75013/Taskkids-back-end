@@ -19,6 +19,16 @@ public class ChildrenController {
 
     private final ChildrenService childrenService;
 
+    @GetMapping("/children") //Postman OK ***************************************************
+    public ResponseEntity<List<ChildrenEntity>> getChildren() {
+        return new ResponseEntity<>(childrenService.getAll(),HttpStatus.OK);
+    }
+
+    @GetMapping("/{childrenId}")
+    public ResponseEntity<ChildrenEntity> getChild(@PathVariable Long childrenId) {
+        ChildrenEntity child = childrenService.getChild(childrenId);
+        return new ResponseEntity<>(child, HttpStatus.OK);
+    }
 
 }
 

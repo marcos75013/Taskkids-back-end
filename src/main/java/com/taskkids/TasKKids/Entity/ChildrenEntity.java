@@ -35,7 +35,6 @@ public class ChildrenEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long childId;
 
-    @Column(nullable = false)
     private String nickname;
 
     @Column
@@ -48,7 +47,6 @@ public class ChildrenEntity {
     private Integer age;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", nullable = false)
     @JsonIgnoreProperties("children")
     private ParentsEntity parent;
 
