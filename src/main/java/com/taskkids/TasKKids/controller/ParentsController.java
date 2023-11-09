@@ -67,11 +67,11 @@ public class ParentsController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-//    //rajouter une ou plusieurs tâches à un ou plusieurs enfants (Parent):   ////pas encore de servive
-   @PostMapping("/{parentId}/children/{childId}/tasks") //XXXXXXXXXXXXXXXX ne fonctionne pas
-   public ResponseEntity<ParentsEntity> addTasksToChild(@PathVariable Long parentId, @PathVariable Long childId, @RequestBody TasksEntity task) {
-       ParentsEntity parent = parentsService.addTaskToChild(parentId, childId, task);
-       return new ResponseEntity<>(parent, HttpStatus.CREATED);
+//    //rajouter une ou plusieurs tâches à un ou plusieurs enfants (Parent):
+   @PostMapping("/profile/{parentId}/children/{childId}/tasks") //XXXXXXXXXXXXXXXX ne fonctionne pas
+   public ResponseEntity<TasksEntity> addTasksToChild(@PathVariable Long parentId, @PathVariable Long childId, @RequestBody TasksEntity task) {
+       TasksEntity tasks = parentsService.addTaskToChild(parentId, childId, task);
+       return new ResponseEntity<>(tasks, HttpStatus.CREATED);
 }
 //
 //    //modifier une ou plusieurs tâches à un ou plusieurs enfants (Parent):   ////pas encore de servive

@@ -1,5 +1,6 @@
 
 package com.taskkids.TasKKids.entity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,12 +34,13 @@ public class TasksEntity {
     private String periodicity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "child_id", nullable = false)
+    @JsonIgnoreProperties("tasks")
     private ChildrenEntity child;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", nullable = false)
+    @JsonIgnoreProperties("tasks")
     private ParentsEntity parent;
+
 
 
 }

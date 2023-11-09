@@ -156,24 +156,56 @@ public class ParentsService {
 
     ///////////////////////////////////////////////
 
+//    @Transactional
+//    public ParentsEntity addTaskToChild(Long parentId, Long childId, TasksEntity task) {
+//        ChildrenEntity child = childrenRepository.findById(childId)
+//                .orElseThrow(() -> new IllegalArgumentException("Enfant introuvable."));
+//
+//        if (!child.getParent().getParentId().equals(parentId)) {
+//            throw new IllegalArgumentException("L'enfant n'appartient pas au parent.");
+//        }
+//
+//        task.setChild(child);
+//        task.setParent(child.getParent());
+//
+//        child.getTasks().add(task);
+//
+//        tasksRepository.save(task);
+//        childrenRepository.save(child);
+//
+//        return child.getParent();
+//    }
+
     @Transactional
-    public ParentsEntity addTaskToChild(Long parentId, Long childId, TasksEntity task) {
+    public TasksEntity addTaskToChild(Long parentId, Long childId, TasksEntity task) {
+        TasksEntity taskChild = new TasksEntity();
+
         ChildrenEntity child = childrenRepository.findById(childId)
                 .orElseThrow(() -> new IllegalArgumentException("Enfant introuvable."));
 
-        if (!child.getParent().getParentId().equals(parentId)) {
-            throw new IllegalArgumentException("L'enfant n'appartient pas au parent.");
-        }
+        ParentsEntity parent = parentsRepository.findById(parentId)
+                .orElseThrow(() -> new IllegalArgumentException("Parent introuvable."));
 
-        task.setChild(child);
+        taskChild.setDescription(task.getDescription());
+        System.out.println(task.getDescription());
 
-        child.getTasks().add(task);
+        taskChild.setRewardAmount(task.getRewardAmount());
+        System.out.println(task.getRewardAmount());
 
-        childrenRepository.save(child);
+        taskChild.setPeriodicity(task.getPeriodicity());
+        System.out.println(task.getPeriodicity());
 
-        return child.getParent();
+        taskChild.setChild(child);
+        System.out.println(child.getAge());
+
+        taskChild.setParent(parent);
+        System.out.println(parent.getNickname());
+
+
+
+        return tasksRepository.save(taskChild);
+
     }
-
 
     ///////////////////////////////////////////////
 

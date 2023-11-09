@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,18 +34,17 @@ public class ParentsEntity {
     @Column
     private String picture;
 
-    // Relation avec ChildrenEntity
-//    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    @JoinColumn(name = "parent_id", nullable = false)
-//    @JsonIgnoreProperties("parent")
-//    private Set<ChildrenEntity> children = new HashSet<>();
-
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+     //Relation avec ChildrenEntity
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "parent_id", nullable = false)
+    @JsonIgnoreProperties("parent")
     private Set<ChildrenEntity> children = new HashSet<>();
 
 
     // Relation avec TasksEntity
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "parent_id", nullable = false)
+    @JsonIgnoreProperties("parent")
     private Set<TasksEntity> tasks = new HashSet<>();
 
     // Relation avec RewardsEntity
