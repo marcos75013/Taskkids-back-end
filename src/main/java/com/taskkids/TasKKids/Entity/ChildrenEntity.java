@@ -47,11 +47,13 @@ public class ChildrenEntity {
     private Integer age;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("children")
+    @JsonIgnoreProperties("child")
     private ParentsEntity parent;
 
     // Relation avec TasksEntity
-    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "child_id", nullable = false)
+    @JsonIgnoreProperties("child")
     private Set<TasksEntity> tasks = new HashSet<>();
 
     // Relation avec ScoreEntity
@@ -59,26 +61,26 @@ public class ChildrenEntity {
     private Set<ScoreEntity> scores = new HashSet<>();
 
 
-    public Object getFirstName() {
-        return null;
-    }
-
-    public void setFirstName(Object firstName) {
-    }
-
-    public Object getLastName() {
-        return null;
-    }
-
-    public Object getBirthDate() {
-        return null;
-    }
-
-    public void setLastName(Object lastName) {
-    }
-
-    public void setBirthDate(Object birthDate) {
-    }
+//    public Object getFirstName() {
+//        return null;
+//    }
+//
+//    public void setFirstName(Object firstName) {
+//    }
+//
+//    public Object getLastName() {
+//        return null;
+//    }
+//
+//    public Object getBirthDate() {
+//        return null;
+//    }
+//
+//    public void setLastName(Object lastName) {
+//    }
+//
+//    public void setBirthDate(Object birthDate) {
+//    }
 }
 
     
