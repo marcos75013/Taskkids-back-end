@@ -36,10 +36,14 @@ public class ParentsEntity {
     private String picture;
 
     // Relation avec ChildrenEntity
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "parent_id", nullable = false)
-    @JsonIgnoreProperties("parent")
+//    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    @JoinColumn(name = "parent_id", nullable = false)
+//    @JsonIgnoreProperties("parent")
+//    private Set<ChildrenEntity> children = new HashSet<>();
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ChildrenEntity> children = new HashSet<>();
+
 
     // Relation avec TasksEntity
     @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST)

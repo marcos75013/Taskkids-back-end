@@ -50,14 +50,6 @@ public class ChildrenService {
         return childrenRepository.findAll();
     }
 
-
-    public ChildrenEntity getChild(Long childrenId) {
-        Optional<ChildrenEntity> optionalChild = childrenRepository.findById(childrenId);
-        if (optionalChild.isEmpty()) {
-            throw new IllegalArgumentException("Enfant introuvable.");
-        }
-        return optionalChild.get();
-    }
 }
 
 
