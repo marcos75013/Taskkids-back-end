@@ -7,5 +7,6 @@ import com.taskkids.TasKKids.entity.ParentsEntity;
 
 @Repository
 public interface ParentsRepository extends JpaRepository<ParentsEntity, Long> {
-    
+
+    ParentsEntity findByEmail(String email);
 }
