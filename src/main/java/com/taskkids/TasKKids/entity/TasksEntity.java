@@ -1,4 +1,4 @@
-package com.taskkids.TasKKids.Entity;
+package com.taskkids.TasKKids.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;

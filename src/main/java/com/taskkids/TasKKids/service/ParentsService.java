@@ -1,8 +1,7 @@
 package com.taskkids.TasKKids.service;
 
-import com.taskkids.TasKKids.Entity.ChildrenEntity;
-import com.taskkids.TasKKids.Entity.ParentsEntity;
-import com.taskkids.TasKKids.Entity.TasksEntity;
+import com.taskkids.TasKKids.entity.ChildrenEntity;
+import com.taskkids.TasKKids.entity.ParentsEntity;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

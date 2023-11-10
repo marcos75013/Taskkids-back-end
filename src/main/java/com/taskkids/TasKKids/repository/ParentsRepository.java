@@ -1,6 +1,6 @@
 package com.taskkids.TasKKids.repository;
 
-import com.taskkids.TasKKids.Entity.ParentsEntity;
+import com.taskkids.TasKKids.entity.ParentsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

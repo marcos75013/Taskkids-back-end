@@ -1,9 +1,8 @@
 package com.taskkids.TasKKids.controller;
 
 
-import com.taskkids.TasKKids.Entity.ChildrenEntity;
-import com.taskkids.TasKKids.Entity.ParentsEntity;
-import com.taskkids.TasKKids.Entity.TasksEntity;
+import com.taskkids.TasKKids.entity.ChildrenEntity;
+import com.taskkids.TasKKids.entity.ParentsEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
