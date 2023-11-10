@@ -1,15 +1,12 @@
 package com.taskkids.TasKKids.service;
 
-import com.taskkids.TasKKids.entity.ChildrenEntity;
-import com.taskkids.TasKKids.entity.TasksEntity;
-import com.taskkids.TasKKids.repository.ChildrenRepository;
-import com.taskkids.TasKKids.repository.TasksRepository;
+import com.taskkids.TasKKids.Entity.ChildrenEntity;
+import com.taskkids.TasKKids.Entity.ParentsEntity;
+import com.taskkids.TasKKids.Entity.TasksEntity;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.taskkids.TasKKids.entity.ParentsEntity;
 import com.taskkids.TasKKids.repository.ParentsRepository;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
 import java.util.List;
 
@@ -18,298 +15,45 @@ import java.util.List;
 public class ParentsService {
 
     private final ParentsRepository parentsRepository;
-    private final ChildrenRepository childrenRepository;
 
-    private final TasksRepository tasksRepository;
 
-    ///////////////////////////////////////////////
     public List<ParentsEntity> getAll() {
         return parentsRepository.findAll();
-    } ///////////OK
-
-    public ParentsEntity createProfile(ParentsEntity parent) {   ///////////OK
-        if (parentsRepository.findByEmail(parent.getEmail()) != null) {
-            throw new IllegalArgumentException("Cet email est déjà utilisé.");
-        }
-        parent.setNickname("Nouveau Parent");
-        return parentsRepository.save(parent);
     }
 
-    public ParentsEntity getProfile(Long parentId) {  ///////////OK
+    public ParentsEntity create(ParentsEntity newParent) {
+        if (parentsRepository.findByEmail(newParent.getEmail()) != null) {
+            throw new IllegalArgumentException("Cet email est déjà utilisé.");
+        }
+        return parentsRepository.save(newParent);
+    }
+
+    public ParentsEntity getById(Long parentId) {
         Optional<ParentsEntity> optionalParent = parentsRepository.findById(parentId);
         if (optionalParent.isEmpty()) {
-            throw new IllegalArgumentException("Parent introuvable.");
+            throw new EntityNotFoundException("Parent introuvable.");
         }
         return optionalParent.get();
     }
 
-    ///////////////////////////////////////////////////////////////////
 
-    public ParentsEntity updateProfile(Long parentId, ParentsEntity parentDetails) {
-        Optional<ParentsEntity> optionalParent = parentsRepository.findById(parentId);
-        if (optionalParent.isEmpty()) {
-            throw new IllegalArgumentException("Parent introuvable.");
-        }
+    public ParentsEntity update(Long parentId, ParentsEntity updatedParent) {
+        ParentsEntity parent = getById(parentId);
 
-        ParentsEntity parent = optionalParent.get();
-        if (parentDetails.getEmail() != null) {
-            parent.setEmail(parentDetails.getEmail());
-        }
-        if (parentDetails.getPassword() != null) {
-            parent.setPassword(parentDetails.getPassword());
-        }
-        if (parentDetails.getNickname() != null) {
-            parent.setNickname(parentDetails.getNickname());
-        }
-        if (parentDetails.getPicture() != null) {
-            parent.setPicture(parentDetails.getPicture());
-        }
+        parent.setEmail(updatedParent.getEmail());
+        parent.setPassword(updatedParent.getPassword());
+        parent.setNickname(updatedParent.getNickname());
+        parent.setPicture(updatedParent.getPicture());
 
         return parentsRepository.save(parent);
     }
-    ///////////////////////////////////////////////////////////////////
 
-    public ParentsEntity addChild(Long parentId, ChildrenEntity child) {
 
-        // Get parent if exists, oterwise throw new exception
-        Optional<ParentsEntity> optionalParent = parentsRepository.findById(parentId);
-        if (optionalParent.isEmpty()) {
-            throw new IllegalArgumentException("Parent introuvable.");
-        }
-        ParentsEntity parent = optionalParent.get();
-
-        // set fetched parent into received child
-        child.setParent(parent);
-        // set recevied cil into fetched parent
-        parent.getChildren().add(child);
-
-        // save entities into both repositories
-        childrenRepository.save(child);
-        parentsRepository.save(parent);
-
-        return parent;
+    public ParentsEntity addChildToParent(Long id, ChildrenEntity newChild) {
+        ParentsEntity parent = this.getById(id);
+        parent.getChildren().add(newChild);
+        return parentsRepository.save(parent);
     }
-    /////////////////////////////////////////////////////////////////
-
-    @Transactional
-    public ParentsEntity updateChild(Long parentId, Long childId, ChildrenEntity childDetails) {
-        // Vérifie si le parent existe
-        Optional<ParentsEntity> optionalParent = parentsRepository.findById(parentId);
-        if (optionalParent.isEmpty()) {
-            throw new IllegalArgumentException("Parent introuvable.");
-        }
-
-        // Vérifie si l'enfant existe
-        ParentsEntity parent = optionalParent.get();
-        Optional<ChildrenEntity> optionalChild = parent.getChildren().stream().filter(child -> child.getChildId().equals(childId)).findFirst();
-        if (optionalChild.isEmpty()) {
-            throw new IllegalArgumentException("Enfant introuvable.");
-        }
-
-        // Je mets à jour les champs modifiables
-        ChildrenEntity child = optionalChild.get();
-        if (childDetails.getNickname() != null) {
-            child.setNickname(childDetails.getNickname());
-        }
-        if (childDetails.getPicture() != null) {
-            child.setPicture(childDetails.getPicture());
-        }
-        if (childDetails.getGender() != null) {
-            child.setGender(childDetails.getGender());
-        }
-        if (childDetails.getAge() != null) {
-            child.setAge(childDetails.getAge());
-        }
-
-        parentsRepository.save(parent);
-
-        return parent;
-    }
-
-    ///////////////////////////////////////////////
-
-    @Transactional
-    public void deleteChild(Long parentId, Long childId) {
-        // Vérifie si le parent existe
-        ParentsEntity parent = parentsRepository.findById(parentId)
-                .orElseThrow(() -> new IllegalArgumentException("Parent introuvable."));
-
-        // Vérifie si l'enfant existe
-        ChildrenEntity child = parent.getChildren().stream()
-                .filter(c -> c.getChildId().equals(childId))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Enfant introuvable."));
-
-        // Retire l'enfant de la collection
-        parent.getChildren().remove(child);
-
-        // Dissocie l'enfant du parent
-        child.setParent(null);
-
-        // Supprime l'enfant de la base de données
-        childrenRepository.delete(child);
-
-        // Pas nécessaire de sauvegarder le parent si tu n'as pas modifié d'autres attributs
-        // La relation entre le parent et l'enfant devrait s'occuper de la cohérence des données
-    }
-
-
-    ///////////////////////////////////////////////
-
-//    @Transactional
-//    public ParentsEntity addTaskToChild(Long parentId, Long childId, TasksEntity task) {
-//        ChildrenEntity child = childrenRepository.findById(childId)
-//                .orElseThrow(() -> new IllegalArgumentException("Enfant introuvable."));
-//
-//        if (!child.getParent().getParentId().equals(parentId)) {
-//            throw new IllegalArgumentException("L'enfant n'appartient pas au parent.");
-//        }
-//
-//        task.setChild(child);
-//        task.setParent(child.getParent());
-//
-//        child.getTasks().add(task);
-//
-//        tasksRepository.save(task);
-//        childrenRepository.save(child);
-//
-//        return child.getParent();
-//    }
-
-    @Transactional
-    public TasksEntity addTaskToChild(Long parentId, Long childId, TasksEntity task) {
-        TasksEntity taskChild = new TasksEntity();
-
-        ChildrenEntity child = childrenRepository.findById(childId)
-                .orElseThrow(() -> new IllegalArgumentException("Enfant introuvable."));
-
-        ParentsEntity parent = parentsRepository.findById(parentId)
-                .orElseThrow(() -> new IllegalArgumentException("Parent introuvable."));
-
-        taskChild.setDescription(task.getDescription());
-        System.out.println(task.getDescription());
-
-        taskChild.setRewardAmount(task.getRewardAmount());
-        System.out.println(task.getRewardAmount());
-
-        taskChild.setPeriodicity(task.getPeriodicity());
-        System.out.println(task.getPeriodicity());
-
-        taskChild.setChild(child);
-        System.out.println(child.getAge());
-
-        taskChild.setParent(parent);
-        System.out.println(parent.getNickname());
-
-
-
-        return tasksRepository.save(taskChild);
-
-    }
-
-    ///////////////////////////////////////////////
-
-    public ParentsEntity updateTask(Long parentId, Long childId, Long taskId, TasksEntity taskDetails) {
-        Optional<ParentsEntity> optionalParent = parentsRepository.findById(parentId);
-        if (optionalParent.isEmpty()) {
-            throw new IllegalArgumentException("Parent introuvable.");
-        }
-
-        ParentsEntity parent = optionalParent.get();
-        Optional<ChildrenEntity> optionalChild = parent.getChildren().stream().filter(child -> child.getChildId().equals(childId)).findFirst();
-        if (optionalChild.isEmpty()) {
-            throw new IllegalArgumentException("Enfant introuvable.");
-        }
-
-        ChildrenEntity child = optionalChild.get();
-        Optional<TasksEntity> optionalTask = child.getTasks().stream().filter(task -> task.getTaskId().equals(taskId)).findFirst();
-        if (optionalTask.isEmpty()) {
-            throw new IllegalArgumentException("Tâche introuvable.");
-        }
-
-        TasksEntity task = optionalTask.get();
-        if (taskDetails.getDescription() != null) {
-            task.setDescription(taskDetails.getDescription());
-        }
-        if (taskDetails.getDescription() != null) {
-            task.setDescription(taskDetails.getDescription());
-        }
-        if (taskDetails.getRewardAmount() != null) {
-            task.setRewardAmount(taskDetails.getRewardAmount());
-        }
-
-        childrenRepository.save(child);
-        parentsRepository.save(parent);
-
-        return parent;
-    }
-
-    ///////////////////////////////////////////////
-    public void deleteTask(Long parentId, Long childId, Long taskId) {
-        Optional<ParentsEntity> optionalParent = parentsRepository.findById(parentId);
-        if (optionalParent.isEmpty()) {
-            throw new IllegalArgumentException("Parent introuvable.");
-        }
-
-        ParentsEntity parent = optionalParent.get();
-        Optional<ChildrenEntity> optionalChild = parent.getChildren().stream().filter(child -> child.getChildId().equals(childId)).findFirst();
-        if (optionalChild.isEmpty()) {
-            throw new IllegalArgumentException("Enfant introuvable.");
-        }
-
-        ChildrenEntity child = optionalChild.get();
-        Optional<TasksEntity> optionalTask = child.getTasks().stream().filter(task -> task.getTaskId().equals(taskId)).findFirst();
-        if (optionalTask.isEmpty()) {
-            throw new IllegalArgumentException("Tâche introuvable.");
-        }
-
-        TasksEntity task = optionalTask.get();
-        child.getTasks().remove(task);
-        task.setChild(null);
-
-        childrenRepository.save(child);
-        parentsRepository.save(parent);
-    }
-
-    ///////////////////////////////////////////////
-
-    public List<TasksEntity> getTasks(Long parentId, Long childId) {
-        Optional<ParentsEntity> optionalParent = parentsRepository.findById(parentId);
-        if (optionalParent.isEmpty()) {
-            throw new IllegalArgumentException("Parent introuvable.");
-        }
-
-        ParentsEntity parent = optionalParent.get();
-        Optional<ChildrenEntity> optionalChild = parent.getChildren().stream().filter(child -> child.getChildId().equals(childId)).findFirst();
-        if (optionalChild.isEmpty()) {
-            throw new IllegalArgumentException("Enfant introuvable.");
-        }
-
-        ChildrenEntity child = optionalChild.get();
-        return (List<TasksEntity>) child.getTasks();
-    }
-
-    ///////////////////////////////////////////////
-
-    public Integer getScore(Long parentId, Long childId) {
-        Optional<ParentsEntity> optionalParent = parentsRepository.findById(parentId);
-        if (optionalParent.isEmpty()) {
-            throw new IllegalArgumentException("Parent introuvable.");
-        }
-
-        ParentsEntity parent = optionalParent.get();
-        Optional<ChildrenEntity> optionalChild = parent.getChildren().stream().filter(child -> child.getChildId().equals(childId)).findFirst();
-        if (optionalChild.isEmpty()) {
-            throw new IllegalArgumentException("Enfant introuvable.");
-        }
-
-        ChildrenEntity child = optionalChild.get();
-        return child.getScores().stream().mapToInt(score -> score.getScore()).sum();
-    }
-
-    ///////////////////////////////
-
-
 
 }
 

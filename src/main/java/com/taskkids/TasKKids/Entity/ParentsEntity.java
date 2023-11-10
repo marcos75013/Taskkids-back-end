@@ -1,5 +1,5 @@
+package com.taskkids.TasKKids.Entity;
 
-package com.taskkids.TasKKids.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class ParentsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long parentId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -34,21 +34,19 @@ public class ParentsEntity {
     @Column
     private String picture;
 
-     //Relation avec ChildrenEntity
+    // Relation avec ChildrenEntity
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinColumn(name = "parent_id", nullable = false)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @JsonIgnoreProperties("parent")
     private Set<ChildrenEntity> children = new HashSet<>();
 
 
-    // Relation avec TasksEntity
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "parent_id", nullable = false)
-    @JsonIgnoreProperties("parent")
-    private Set<TasksEntity> tasks = new HashSet<>();
+
 
     // Relation avec RewardsEntity
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.PERSIST)
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id")
+    @JsonIgnoreProperties("parent")
     private Set<RewardsEntity> rewards = new HashSet<>();
 }
 

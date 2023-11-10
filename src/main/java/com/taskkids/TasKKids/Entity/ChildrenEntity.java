@@ -1,5 +1,6 @@
+package com.taskkids.TasKKids.Entity;
 
-package com.taskkids.TasKKids.entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,6 @@ import jakarta.persistence.Table;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @Entity
 @Table(name = "children")
@@ -33,8 +33,9 @@ public class ChildrenEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long childId;
+    private Long id;
 
+    @Column
     private String nickname;
 
     @Column
@@ -46,41 +47,24 @@ public class ChildrenEntity {
     @Column
     private Integer age;
 
+    @Column
+    private int scores;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("child")
+    @JsonIgnore
     private ParentsEntity parent;
 
-    // Relation avec TasksEntity
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "child_id", nullable = false)
+
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "child_id", referencedColumnName ="id")
     @JsonIgnoreProperties("child")
     private Set<TasksEntity> tasks = new HashSet<>();
 
-    // Relation avec ScoreEntity
-    @OneToMany(mappedBy = "child", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ScoreEntity> scores = new HashSet<>();
 
 
-//    public Object getFirstName() {
-//        return null;
-//    }
-//
-//    public void setFirstName(Object firstName) {
-//    }
-//
-//    public Object getLastName() {
-//        return null;
-//    }
-//
-//    public Object getBirthDate() {
-//        return null;
-//    }
-//
-//    public void setLastName(Object lastName) {
-//    }
-//
-//    public void setBirthDate(Object birthDate) {
-//    }
+
+
+
 }
 
     
