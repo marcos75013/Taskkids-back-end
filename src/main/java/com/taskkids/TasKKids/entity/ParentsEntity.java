@@ -33,6 +33,7 @@ public class ParentsEntity {
     @Column
     private String picture;
 
+
     // Relation avec ChildrenEntity
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
@@ -47,5 +48,8 @@ public class ParentsEntity {
     @JoinColumn(name = "parent_id", referencedColumnName = "id")
     @JsonIgnoreProperties("parent")
     private Set<RewardsEntity> rewards = new HashSet<>();
+
+    public ParentsEntity(String email, String password, String nickname, String picture) {
+    }
 }
 

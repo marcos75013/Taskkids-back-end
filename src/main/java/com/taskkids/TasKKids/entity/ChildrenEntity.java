@@ -58,10 +58,9 @@ public class ChildrenEntity {
     private Set<TasksEntity> tasks = new HashSet<>();
 
 
+    public ChildrenEntity(String nickname, String picture, String gender, int age, int score, ParentsEntity parentsEntity) {
 
-
-
-
+    }
 }
 
     

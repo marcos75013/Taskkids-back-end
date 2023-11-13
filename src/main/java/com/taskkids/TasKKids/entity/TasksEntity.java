@@ -28,5 +28,8 @@ public class TasksEntity {
     private ChildrenEntity child;
 
 
+    public TasksEntity(String description, int rewardAmount, String periodicity, ChildrenEntity childrenEntity) {
+
+    }
 }
 

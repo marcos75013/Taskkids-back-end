@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/bind/parents-children")
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 public class ParentsChildrenController {
 
