@@ -26,6 +26,12 @@ public class ChildrenController {
     public ResponseEntity<ChildrenEntity> getById(@PathVariable Long id) {
         return new ResponseEntity<>(childrenService.getById(id), HttpStatus.OK);
     }
+
+    @GetMapping("/{id}/tasks")
+    public ResponseEntity<List<TasksEntity>> getTasksByChildId(@PathVariable Long id) {
+        return new ResponseEntity<>(childrenService.getTasksByChildId(id), HttpStatus.OK);
+    }
+
     @PutMapping("/{id}")
     public  ResponseEntity<ChildrenEntity> update(@PathVariable Long id, @RequestBody ChildrenEntity newChild) {
         return new ResponseEntity<>(childrenService.update(id, newChild),HttpStatus.OK);
@@ -44,4 +50,3 @@ public class ChildrenController {
     }
 
 }
-

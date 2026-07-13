@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.taskkids.TasKKids.service.ParentsService;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -34,16 +35,25 @@ public class ParentsController {
         return new ResponseEntity<>(parentsService.create(newParent), HttpStatus.CREATED);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<ParentsEntity> login(@RequestBody Map<String, String> credentials) {
+        try {
+            ParentsEntity parent = parentsService.login(credentials.get("email"), credentials.get("password"));
+            return new ResponseEntity<>(parent, HttpStatus.OK);
+        } catch (IllegalArgumentException exception) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ParentsEntity> update(@PathVariable Long id, @RequestBody ParentsEntity updatedParent) {
         return new ResponseEntity<>(parentsService.update(id, updatedParent), HttpStatus.OK);
     }
 
     @PostMapping("/{id}/add-child")
-    public ResponseEntity<ChildrenEntity> addChildToParent(@PathVariable Long id, @RequestBody ChildrenEntity newChild) {
-        return new ResponseEntity(parentsService.addChildToParent(id, newChild), HttpStatus.CREATED);
+    public ResponseEntity<ParentsEntity> addChildToParent(@PathVariable Long id, @RequestBody ChildrenEntity newChild) {
+        return new ResponseEntity<>(parentsService.addChildToParent(id, newChild), HttpStatus.CREATED);
     }
 
 
 }
-

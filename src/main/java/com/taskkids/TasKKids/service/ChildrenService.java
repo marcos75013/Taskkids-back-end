@@ -7,6 +7,7 @@ import com.taskkids.TasKKids.repository.TasksRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,6 +24,10 @@ public class ChildrenService {
     public ChildrenEntity getById(Long id) {
         return childrenRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("can't found id " + id));
+    }
+
+    public List<TasksEntity> getTasksByChildId(Long id) {
+        return new ArrayList<>(getById(id).getTasks());
     }
 
     public ChildrenEntity update(Long id, ChildrenEntity newChild) {
@@ -53,5 +58,4 @@ public class ChildrenService {
 
 
 }
-
 
